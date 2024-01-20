@@ -40,6 +40,14 @@ PETABYTE = math.pow(1024, 5)
 DATE_FORMAT = "%Y-%m-%d"
 
 
+def logger(msg: str, err=False):
+    command = ["logger", "-t", "RSTATS", "-p", "user.notice"]
+    if err:
+        command.append("-s")
+    command.append(msg)
+    subprocess.run(command)
+
+
 def get_time(file: str | None = None):
     try:
         if file is not None:
