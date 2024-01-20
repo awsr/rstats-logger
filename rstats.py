@@ -407,11 +407,22 @@ def main():
         if args.out is None:
             RStats(args.filename, modified).print()
         else:
-            stats = RStats(args.filename, modified).dump()
             if isfile(args.out):
                 prev_export = load_json_or_backup(args.out)
-                if prev_export is not None:
-                    stats.merge_history(compatibility(prev_export))
+                try:
+                    prev_run = datetime.fromisoformat(prev_export["meta"]["time_script"])
+                    if get_time() < prev_run:
+                        # Router has restarted after power outage and clock hasn't been updated
+                        logger(f"{get_time()} is before last-run time of {prev_run}")
+                        sys.exit()
+                except TypeError as err:
+                    logger(err, True)
+                    sys.exit(1)
+
+            stats = RStats(args.filename, modified).dump()
+
+            if prev_export is not None:
+                stats.merge_history(compatibility(prev_export))
 
             json_data = stats.to_json()
             with open(args.out, "w", encoding="utf8") as f:
