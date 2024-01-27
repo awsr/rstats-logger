@@ -411,9 +411,9 @@ def main():
                 prev_export = load_json_or_backup(args.out)
                 try:
                     prev_run = datetime.fromisoformat(prev_export["meta"]["time_script"])
-                    if get_time() < prev_run:
+                    if NOW < prev_run:
                         # Router has restarted after power outage and clock hasn't been updated
-                        logger(f"{get_time()} is before last-run time of {prev_run}")
+                        logger(f"{NOW} is before last-run time of {prev_run}")
                         sys.exit()
                 except TypeError as err:
                     logger(err, True)
