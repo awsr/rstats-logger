@@ -223,6 +223,7 @@ class StatsData:
 
     def add_monthly(self, entry: tuple[datetime, int, int]):
         new_data = MonthlyTraffic(entry[0], [entry[1], entry[2]])
+        # TODO: Find way to pass along error state from daily traffic based on month
         self.monthly[new_data.date_str] = new_data
 
     def merge_history(self, history):
