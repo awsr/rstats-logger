@@ -378,7 +378,7 @@ def load_json_or_backup(path):
         with open(path, "r", encoding="utf8") as f:
             return json.loads(f.read())
     except json.JSONDecodeError as err:
-        sys.stderr.write(f"JSON Decode Error at position {err.pos}: {err.msg}")
+        logger(f"JSON Decode Error at position {err.pos}: {err.msg}", True)
         copyfile(path, f"{path}.err")
 
     if isfile(f"{path}.bak"):
@@ -386,9 +386,7 @@ def load_json_or_backup(path):
             with open(f"{path}.bak", "r", encoding="utf8") as f:
                 return json.loads(f.read())
         except json.JSONDecodeError as err:
-            sys.stderr.write(
-                f"Error reading backup data: JSON Decode Error at position {err.pos}: {err.msg}"
-            )
+            logger(f"Error reading backup data: JSON Decode Error at position {err.pos}: {err.msg}", True)
     else:
         sys.stderr.write("Unable to find backup file")
 
